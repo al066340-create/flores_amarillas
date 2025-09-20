@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <title>Ramo de flores amarillas</title>
+  <style>
+    :root{
+      --bg-top:#0d1b2a;
+      --bg-bottom:#1b263b;
+      --ground:#264d26;
+      --petal:#ffd54f;
+      --petal-2:#ffeb3b;
+      --center:#b87900;
+      --stem:#2e7d32;
+      --leaf:#43a047;
+      --ribbon:#ff5e7e;
+    }
+
+    html,body{
+      height:100%;
+      margin:0;
+      font-family: system-ui, sans-serif;
+      background: linear-gradient(180deg, var(--bg-top), var(--bg-bottom) 70%);
+      -webkit-tap-highlight-color: transparent;
+      overflow:hidden;
+    }
+
+    .wrap{
+      display:grid;
+      place-items:center;
+      height:100%;
+      position:relative;
+    }
+
+    .moon{
+      position:absolute;
+      top:8%;
+      right:12%;
+      width:90px;
+      height:90px;
+      border-radius:50%;
+      background: radial-gradient(circle at 30% 30%, #fff, #e6e6e6 40%, #ccc 70%, #999 100%);
+      box-shadow: 0 0 30px 12px rgba(255,255,210,.5), 0 0 80px rgba(255,255,180,.3);
+      z-index:0;
+      overflow:hidden;
+      animation: pulseGlow 6s ease-in-out infinite;
+    }
+    .moon::before{
+      content:"";
+      position:absolute;
+      width:100%; height:100%;
+      border-radius:50%;
+      background: radial-gradient(circle at 60% 40%, rgba(200,200,200,.6) 0%, transparent 60%);
+    }
+    .moon::after{
+      content:"";
+      position:absolute;
+      top:20%; left:25%;
+      width:20px; height:20px;
+      border-radius:50%;
+      background: rgba(180,180,180,.7);
+      box-shadow: 35px 15px 0 -3px rgba(180,180,180,.6), -20px 30px 0 -5px rgba(180,180,180,.5);
+    }
+
+    @keyframes pulseGlow {
+      0% { box-shadow: 0 0 20px 8px rgba(255,255,210,.4), 0 0 60px rgba(255,255,180,.25); }
+      50% { box-shadow: 0 0 35px 14px rgba(255,255,230,.7), 0 0 90px rgba(255,255,200,.4); }
+      100% { box-shadow: 0 0 20px 8px rgba(255,255,210,.4), 0 0 60px rgba(255,255,180,.25); }
+    }
+
+    .stars{
+      position:absolute;
+      inset:0;
+      z-index:0;
+      background: transparent;
+      pointer-events:none;
+    }
+    .stars span{
+      position:absolute;
+      width:2px; height:2px;
+      border-radius:50%;
+      animation: twinkle 2s infinite alternate;
+    }
+    @keyframes twinkle {
+      from { opacity:.4; transform: scale(.8); }
+      to   { opacity:1; transform: scale(1.2); }
+    }
+
+    .bouquet{
+      width: min(95vw, 520px);
+      aspect-ratio: 3 / 5;
+      position: relative;
+      border-radius: 24px;
+      box-shadow: 0 16px 40px rgba(0,0,0,.12), inset 0 0 0 1px rgba(255,255,255,.2);
+      background: radial-gradient(120% 90% at 50% 15%, rgba(255,255,255,.1), transparent 65%) no-repeat;
+      z-index:1;
+    }
+
+    /* 🌿 Césped realista */
+    .ground{
+      position:absolute; 
+      inset:auto 0 0 0; 
+      height: 22%;
+
+      background: 
+        radial-gradient(circle at 30% 40%, rgba(20,60,20,0.4) 0%, transparent 60%),
+        radial-gradient(circle at 70% 30%, rgba(30,80,30,0.4) 0%, transparent 60%),
+        repeating-linear-gradient(
+          0deg,
+          #2e7d32 0px,
+          #2e7d32 3px,
+          #33691e 4px,
+          #33691e 7px
+        ),
+        linear-gradient(180deg, var(--ground), #1b3d1b);
+
+      clip-path: ellipse(120% 100% at 50% 100%);
+
+      border-bottom-left-radius: 24px; 
+      border-bottom-right-radius: 24px;
+    }
+
+    svg{ position:absolute; inset:0; width:100%; height:100%; }
+
+    @keyframes sway {
+      0% { transform: rotate(-3deg); }
+      50% { transform: rotate(3deg); }
+      100% { transform: rotate(-3deg); }
+    }
+    @keyframes bloom {
+      0% { transform: scale(0.05) rotate(-10deg); opacity:.0; }
+      60% { transform: scale(1.05) rotate(2deg); opacity:1; }
+      100% { transform: scale(1) rotate(0deg); opacity:1; }
+    }
+    @keyframes floatUp {
+      0% { transform: translateY(0) scale(.8); opacity: .0; }
+      20% { opacity:.8; }
+      100% { transform: translateY(-60px) scale(1); opacity: 0; }
+    }
+
+    @keyframes pulseFlower {
+      0%,100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+    }
+
+    .svg-sway, .flower-head, .leaf { transform-box: fill-box; transform-origin: bottom center; }
+    .flower-head { transform-origin: center; filter: drop-shadow(0 0 6px rgba(255,255,150,.6)); animation: pulseFlower 6s ease-in-out infinite; }
+
+    .stem { stroke: var(--stem); stroke-width: 3.5; fill: none; }
+    .leaf { fill: var(--leaf); opacity:.95; }
+    .petal { fill: var(--petal); filter: drop-shadow(0 0 4px rgba(255,255,120,.5)); }
+    .petal[data-alt="1"]{ fill: var(--petal-2); }
+    .core { fill: var(--center); filter: drop-shadow(0 0 4px rgba(255,200,80,.5)); }
+
+    .svg-sway { animation: sway var(--sway,6s) ease-in-out infinite; }
+    .flower-head.blooming { animation: bloom 1200ms var(--delay, 0ms) cubic-bezier(.2,.7,.2,1) forwards, pulseFlower 6s ease-in-out infinite; }
+
+    .pollen { fill: #ffef9a; opacity:.8; animation: floatUp var(--rise,2400ms) ease-in-out var(--delay,0ms) infinite; }
+
+    .ribbon-shadow { filter: drop-shadow(0 2px 2px rgba(0,0,0,.25)); }
+
+    .hint{
+      position:absolute; inset:auto 12px 12px auto; z-index:2;
+      font-size: 12px; padding: 8px 10px; border-radius: 999px;
+      background: rgba(255,255,255,.65);
+      box-shadow: 0 6px 16px rgba(0,0,0,.2);
+      color:#fff;
+      backdrop-filter: blur(4px);
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="moon"></div>
+    <div class="stars"></div>
+
+    <div class="bouquet" id="bouquet">
+      <div class="hint">Toca para florecer ✨</div>
+      <svg viewBox="0 0 300 500" aria-label="Ramo de flores amarillas animado">
+        <g class="svg-sway" style="--sway:7.5s">
+          <g id="stems"></g>
+          <g id="flowers"></g>
+          <g class="ribbon-shadow" transform="translate(140,390)">
+            <path d="M 0 0 c -28 10 -58 28 -75 54 c 24 6 54 -6 74 -20 z" fill="var(--ribbon)" opacity=".95"/>
+            <path d="M 0 0 c 28 10 58 28 75 54 c -24 6 -54 -6 -74 -20 z" fill="var(--ribbon)" opacity=".95"/>
+            <circle cx="0" cy="4" r="12" fill="var(--ribbon)" />
+          </g>
+        </g>
+        <g id="pollen"></g>
+      </svg>
+      <div class="ground"></div>
+    </div>
+  </div>
+
+  <script>
+    const starsContainer = document.querySelector('.stars');
+    const colors = ['#fff', '#ffe9b0', '#cce6ff'];
+    for(let i=0; i<60; i++){
+      const star = document.createElement('span');
+      star.style.top = Math.random()*100 + '%';
+      star.style.left = Math.random()*100 + '%';
+      star.style.background = colors[Math.floor(Math.random()*colors.length)];
+      star.style.animationDelay = (Math.random()*3).toFixed(2)+'s';
+      starsContainer.appendChild(star);
+    }
+
+    const LAYOUT = [
+      { x: 70,  y: 230, size: 26, delay: 0 },
+      { x: 130, y: 200, size: 30, delay: 120 },
+      { x: 190, y: 230, size: 26, delay: 240 },
+      { x: 100, y: 270, size: 22, delay: 360 },
+      { x: 160, y: 270, size: 22, delay: 480 },
+      { x: 130, y: 300, size: 18, delay: 600 }
+    ];
+
+    const stemsGroup   = document.getElementById('stems');
+    const flowersGroup = document.getElementById('flowers');
+    const pollenGroup  = document.getElementById('pollen');
+    const bouquet      = document.getElementById('bouquet');
+
+    const svgns = 'http://www.w3.org/2000/svg';
+    const create = (tag, attrs={}) => {
+      const el = document.createElementNS(svgns, tag);
+      for (const k in attrs) el.setAttribute(k, attrs[k]);
+      return el;
+    };
+
+    function drawStem(x, y){
+      const baseX = 150; const baseY = 380;
+      const ctrlX = (x + baseX)/2 + (Math.random()*40 - 20);
+      const ctrlY = (y + baseY)/2 + 30;
+      const d = `M ${baseX} ${baseY} Q ${ctrlX} ${ctrlY} ${x} ${y}`;
+      const path = create('path', { d, class: 'stem' });
+      stemsGroup.appendChild(path);
+
+      const t = 0.55;
+      const px = (1-t)*(1-t)*baseX + 2*(1-t)*t*ctrlX + t*t*x;
+      const py = (1-t)*(1-t)*baseY + 2*(1-t)*t*ctrlY + t*t*y;
+      const leaf = create('path', {
+        d: `M ${px} ${py} c 14 -10 26 -2 0 18 c -26 -10 -14 -18 0 -18 z`,
+        class: 'leaf'
+      });
+      stemsGroup.appendChild(leaf);
+    }
+
+    function drawFlower({x,y,size,delay}){
+      const g = create('g', { transform: `translate(${x} ${y})`});
+      const head = create('g', { class: 'flower-head' });
+      head.style.setProperty('--delay', `${delay}ms`);
+
+      const petals = 9 + (Math.random()>0.6 ? 1 : 0);
+      const rOuter = size;
+      const rInner = size*0.58;
+
+      for(let layer=0; layer<2; layer++){
+        const count = petals - (layer?2:0);
+        for(let i=0;i<count;i++){
+          const angle = (360/count)*i + (layer? (180/count):0);
+          const rx = (layer? rInner : rOuter) * 0.55;
+          const ry = (layer? rInner : rOuter) * 0.95;
+          const petal = create('ellipse', {
+            cx: 0, cy: 0, rx, ry, transform: `rotate(${angle}) translate(0 ${-ry*0.75})`,
+            class: 'petal'
+          });
+          if (layer && i%2===0) petal.dataset.alt = '1';
+          head.appendChild(petal);
+        }
+      }
+
+      const core = create('circle', { r: size*0.38, class: 'core' });
+      head.appendChild(core);
+
+      g.appendChild(head);
+      flowersGroup.appendChild(g);
+
+      return head;
+    }
+
+    function sprinklePollen(){
+      pollenGroup.innerHTML = '';
+      for(let i=0;i<16;i++){
+        const x = 60 + Math.random()*180;
+        const y = 220 + Math.random()*120;
+        const r = 1 + Math.random()*2.2;
+        const c = create('circle', { cx:x, cy:y, r, class:'pollen' });
+        c.style.setProperty('--delay', `${Math.random()*1800|0}ms`);
+        c.style.setProperty('--rise', `${1800 + Math.random()*1800|0}ms`);
+        pollenGroup.appendChild(c);
+      }
+    }
+
+    const heads = LAYOUT.map(pos => {
+      drawStem(pos.x, pos.y);
+      return drawFlower(pos);
+    });
+
+    requestAnimationFrame(()=>{
+      heads.forEach(h => h.classList.add('blooming'));
+      sprinklePollen();
+    });
+
+    const reBloom = () => {
+      heads.forEach(h => {
+        h.classList.remove('blooming');
+        void h.getBoundingClientRect();
+        h.classList.add('blooming');
+      });
+      sprinklePollen();
+    };
+    bouquet.addEventListener('click', reBloom);
+    bouquet.addEventListener('touchstart', reBloom, {passive:true});
+
+    if (window.DeviceOrientationEvent) {
+      window.addEventListener('deviceorientation', (e) => {
+        const tilt = Math.max(-6, Math.min(6, (e.gamma||0)/3));
+        document.querySelector('.svg-sway').style.transform = `rotate(${tilt}deg)`;
+      }, true);
+    }
+
+    bouquet.tabIndex = 0;
+    bouquet.addEventListener('keydown', (e)=>{ if(e.key==='Enter' || e.key===' '){ e.preventDefault(); reBloom(); } });
+  </script>
+</body>
+</html>
